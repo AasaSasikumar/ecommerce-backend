@@ -1,17 +1,25 @@
-const express = require("express");
-const cors = require("cors");
-const dbConnection = require("./Configure/dbconnections");
-const app = express();
-const adminRoutes = require('./Configure/Routes/AdminRoutes')
-const userRoutes =require("./Configure/Routes/UserRoutes")
-dbConnection.dbConnect();
+require('dotenv').config();
+const express=require("express");
+const cors=require("cors")
+const dbConnect=require("./Config/dbconnection");
+const dbconnection = require('./Config/dbconnection');
+const app=express();
+const userRouter = require('./Route/UserRouter'); 
+const adminRouter = require('./Route/AdminRouter')
+const myListSchema = require('./Route/myList')
 
-const PORT = 5000;
-app.listen(PORT,()=> {
+
+dbconnection.dbConnect();
+
+app.use(express.json())
+app.use(cors())
+app.use("/",userRouter)
+app.use("/admin",adminRouter)
+app.use("/api/my-list",myListSchema)
+
+
+const PORT = process.env.PORT;
+app.listen(PORT,()=>{
     console.log(`Server started at port ${PORT}`);
 });
 
-app.use(express.json());
-
-app.use("/",userRoutes)
-//  app.use("/admin",adminRoutes)
